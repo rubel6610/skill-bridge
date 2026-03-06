@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String?
+  password      String         @default("")
+  role          UserRole       @default(STUDENT)
+  status        STATUS         @default(ACTIVE)
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  dob           DateTime?
+  tutorProfiles TutorProfile?
+
+  bookings Booking[] @relation("StudentBookings")
+
+  reviews Review[]
+}
+
+enum UserRole {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+enum STATUS {
+  ACTIVE
+  BANNED
+}
+
+enum BookingStatus {
+  confirmed
+  completed
+  cancelled
+}
+
+
+model TutorProfile {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  bio              String?
+  hourly_rate      Float
+  experienced_year Int      @default(0)
+  average_rating   Float    @default(0)
+  profileImage     String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  // relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+  tutorCategories TutorCategory[]
+
+  availabilitySlots AvailabilitySlot[]
+
+  bookings Booking[]
+
+  reviews Review[]
+}
+
+model Category {
+  id  String @id @default(uuid())
+  name String @unique
+  description String?
+  created_at DateTime @default(now())
+  
+
+  tutorCategories TutorCategory[]
+}
+
+model TutorCategory {
+  id  String @id @default(uuid())
+  tutorProfileId String
+  categoryId String
+  tutorProfile TutorProfile @relation(fields: [tutorProfileId], references: [id],onDelete: Cascade)
+  category Category @relation(fields: [categoryId],references: [id],onDelete: Cascade)
+}
+
+model AvailabilitySlot {
+  id              String   @id @default(uuid())
+  tutorProfileId  String
+  slotDate        DateTime
+  startTime       DateTime
+  endTime         DateTime
+  isBooked        Boolean  @default(false)
+
+  tutorProfile    TutorProfile @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+  booking         Booking?
+
+  @@index([tutorProfileId])
+}
+
+model Booking {
+  id                 String        @id @default(uuid())
+  studentId          String
+  tutorProfileId     String
+  availabilitySlotId String        @unique
+  status             BookingStatus @default(confirmed)
+  totalPrice         Float
+
+  createdAt          DateTime      @default(now())
+
+  // Relations
+  student            User          @relation("StudentBookings", fields: [studentId], references: [id], onDelete: Cascade)
+  tutorProfile       TutorProfile  @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+  availabilitySlot   AvailabilitySlot @relation(fields: [availabilitySlotId], references: [id], onDelete: Cascade)
+  review             Review?
+}
+
+
+model Review {
+  id              String   @id @default(uuid())
+  bookingId       String   @unique
+  studentId       String
+  tutorProfileId  String
+  rating          Int
+  comment         String?
+
+  createdAt       DateTime @default(now())
+
+  booking         Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  student         User          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tutorProfile    TutorProfile  @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+
+  @@index([tutorProfileId])
+}
