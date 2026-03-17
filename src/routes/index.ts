@@ -10,7 +10,7 @@ const routerManager = [
     route: AuthRoutes,
   },
   {
-    path: "/booking",
+    path: "/bookings",
     route: BookingRoutes,
   },
 ];

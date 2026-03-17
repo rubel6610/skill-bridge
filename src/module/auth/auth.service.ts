@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../lib/prisma";
-import { Role } from "@prisma/client";
+
 
 const createUser = async (payload: any) => {
   const { name, email, password, role } = payload;
@@ -10,7 +10,7 @@ const createUser = async (payload: any) => {
     throw new Error("All fields are required");
   }
 
-  if (![Role.STUDENT, Role.TUTOR].includes(role)) {
+  if (!["STUDENT","TUTOR"].includes(role)) {
     throw new Error("Role must be STUDENT or TUTOR");
   }
 
