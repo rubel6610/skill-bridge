@@ -19,7 +19,7 @@ const routerManager =[
         route: TutorRoutes
     },
     {
-        path:'/bookings',
+        path:'/booking',
         route:BookingRoutes
     },
     {

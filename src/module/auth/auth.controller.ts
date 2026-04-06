@@ -45,16 +45,22 @@ const loginUser = async (req: Request, res: Response) => {
 
 const getMe = async (req: Request, res: Response) => {
   try {
-    const result = req.user;
+    const result = await AuthServices.getMe(req.user);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Profile fetched successfully",
+      data: result,
+    });
   } catch (error) {
-    sendResponse(res,{
-         statusCode:500,
-        success:false,
-        message: (error instanceof Error ? error.message : "something went wrong"),
-        data:null
-    })
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error instanceof Error ? error.message : "something went wrong",
+      data: null,
+    });
   }
-}
+};
 
 const AuthController = {
   createUser,

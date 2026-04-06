@@ -12,7 +12,6 @@ export enum userRole {
 
 
 const auth = (...roles:userRole[]) => {
-    console.log(roles);
 
     return async (req: Request, res: Response, next: NextFunction) => {
         // next()
@@ -26,7 +25,6 @@ const auth = (...roles:userRole[]) => {
             }
 
             const decodedToken = jwt.verify(token, config.jwt_secret as string) as JwtPayload
-            console.log(decodedToken);
             const userData = await prisma.user.findUnique({
                 where: {
                     email: decodedToken.email

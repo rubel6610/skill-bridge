@@ -69,11 +69,39 @@ const loginUser = async (payload: any) => {
   return { token , user:userData};
 };
 
+const getMe = async (payload: any) => {
+  const userId = payload?.id;
+
+  if (!userId) {
+    throw new Error("Unauthorized: user id not found in token");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: Number(userId) },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isBanned: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+};
+
 
 
 const AuthServices = {
   createUser,
   loginUser,
+  getMe,
 };
 
 export default AuthServices;
