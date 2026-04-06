@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import AuthServices from "./auth.service";
 import sendResponse from "../../utils/sendResponse";
+import AuthServices from "./auth.service";
+
+
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -41,9 +43,23 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
+const getMe = async (req: Request, res: Response) => {
+  try {
+    const result = req.user;
+  } catch (error) {
+    sendResponse(res,{
+         statusCode:500,
+        success:false,
+        message: (error instanceof Error ? error.message : "something went wrong"),
+        data:null
+    })
+  }
+}
+
 const AuthController = {
   createUser,
-  loginUser
+  loginUser,
+  getMe
 };
 
 export default AuthController;
