@@ -15,7 +15,7 @@ const routerManager =[
         route: AuthRoutes
     },
     {  
-        path: '/tutor',
+        path: '/tutors',
         route: TutorRoutes
     },
     {
