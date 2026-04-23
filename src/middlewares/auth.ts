@@ -16,13 +16,15 @@ const auth = (...roles:userRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         // next()
         try {
-            const token = req.headers.authorization;
-            if (!token) {
+            const tokenHeader = req.headers.authorization;
+            if (!tokenHeader) {
                 return res.status(401).json({
                     success: false,
                     message: 'Unauthorized token is missing'
                 })
             }
+
+            const token = tokenHeader.split(" ")[1]
 
             const decodedToken = jwt.verify(token, config.jwt_secret as string) as JwtPayload
             const userData = await prisma.user.findUnique({
