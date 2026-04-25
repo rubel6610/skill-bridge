@@ -4,19 +4,17 @@ The robust API engine powering the SkillBridge marketplace. Built with **Express
 
 ## 🔗 Quick Links
 
-- **Backend GitHub:** [https://github.com/rubel6610/skill-bridge](https://github.com/rubel6610/skill-bridge)
 - **Frontend GitHub:** [https://github.com/rubel6610/skillbridge-frontend](https://github.com/rubel6610/skillbridge-frontend)
-- **Live API:** [https://skill-bridge-api.onrender.com](https://skill-bridge-api.onrender.com) (Replace with your actual URL)
-- **Live Site:** [https://skillbridge-demo.vercel.app](https://skillbridge-demo.vercel.app) (Replace with your actual URL)
+- **Backend GitHub:** [https://github.com/rubel6610/skill-bridge](https://github.com/rubel6610/skill-bridge)
+- **Live Site:** [https://skillbridge-demo.vercel.app](https://skillbridge-frontend-gamma.vercel.app/) (Replace with your actual URL)
+- **Backend API:** [Render](https://skill-bridge-zp3v.onrender.com) (Replace with your actual URL)
 
 
 ## 🔑 Demo Credentials
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@example.com` | `admin123` |
-| **Tutor** | `tutor@example.com` | `password123` |
-| **Student** | `student@example.com` | `password123` |
+| **Admin** | `admin@example.com` | `admin123` 
 
 ## 🚀 Key Modules
 
