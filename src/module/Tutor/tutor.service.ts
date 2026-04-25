@@ -1,6 +1,17 @@
 import { prisma } from "../../lib/prisma";
 
 // ─────────────────────────────────────────
+// Shared category include helper
+// ─────────────────────────────────────────
+const categoryInclude = {
+   categories: {
+      include: {
+         category: true,
+      },
+   },
+};
+
+// ─────────────────────────────────────────
 // Create Tutor Profile
 // ─────────────────────────────────────────
 const createTutorIntoDB = async (payload: any, userId: number) => {
@@ -31,6 +42,14 @@ const createTutorIntoDB = async (payload: any, userId: number) => {
          isApproved: payload.isApproved ?? true,
          avgRating: 0,
          totalReviews: 0,
+         // Create TutorCategory join rows if categoryIds provided
+         categories: payload.categoryIds?.length
+            ? {
+               create: payload.categoryIds.map((categoryId: number) => ({
+                  categoryId,
+               })),
+            }
+            : undefined,
       },
       include: {
          user: {
@@ -39,7 +58,9 @@ const createTutorIntoDB = async (payload: any, userId: number) => {
                email: true,
                role: true
             }
-         }
+         },
+         ...categoryInclude,
+         availability: true,
       }
    });
 
@@ -62,6 +83,7 @@ const getMyProfileFromDB = async (userId: number) => {
                role: true,
             }
          },
+         ...categoryInclude,
          availability: {
             orderBy: { dayOfWeek: "asc" }
          }
@@ -89,6 +111,22 @@ const updateTutorProfileIntoDB = async (userId: number, payload: any) => {
       throw new Error('Tutor profile not found. Please create your profile first');
    }
 
+   // Rebuild category join rows if categoryIds provided
+   if (payload.categoryIds !== undefined) {
+      await prisma.tutorCategory.deleteMany({
+         where: { tutorProfileId: existingProfile.id }
+      });
+
+      if (payload.categoryIds.length > 0) {
+         await prisma.tutorCategory.createMany({
+            data: payload.categoryIds.map((categoryId: number) => ({
+               tutorProfileId: existingProfile.id,
+               categoryId,
+            })),
+         });
+      }
+   }
+
    const result = await prisma.tutorProfile.update({
       where: { userId },
       data: {
@@ -106,6 +144,7 @@ const updateTutorProfileIntoDB = async (userId: number, payload: any) => {
                role: true
             }
          },
+         ...categoryInclude,
          availability: true,
       }
    });
@@ -178,6 +217,7 @@ const getTutorByIdFromDB = async (id: number) => {
                email: true,
             }
          },
+         ...categoryInclude,
          availability: {
             orderBy: { dayOfWeek: "asc" }
          }
@@ -208,6 +248,7 @@ const getAllTutorsFromDB = async () => {
                email: true,
             }
          },
+         ...categoryInclude,
          availability: true,
       },
       orderBy: { avgRating: "desc" }
@@ -225,17 +266,13 @@ const getAllCategoriesFromDB = async () => {
       orderBy: { name: "asc" }
    });
 
-   if (categories.length === 0) {
-      throw new Error('No categories found');
-   }
-
    return categories;
 };
 
 export const TutorService = {
    createTutorIntoDB,
-   getMyProfileFromDB,       // ← NEW
-   updateTutorProfileIntoDB, // ← NEW
+   getMyProfileFromDB,
+   updateTutorProfileIntoDB,
    setAvailabilityIntoDB,
    getAllTutorsFromDB,
    getTutorByIdFromDB,
