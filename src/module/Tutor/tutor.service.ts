@@ -86,6 +86,14 @@ const getMyProfileFromDB = async (userId: number) => {
          ...categoryInclude,
          availability: {
             orderBy: { dayOfWeek: "asc" }
+         },
+         reviews: {
+            include: {
+               student: {
+                  select: { name: true }
+               }
+            },
+            orderBy: { createdAt: "desc" }
          }
       }
    });
