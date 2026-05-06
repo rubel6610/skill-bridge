@@ -26,6 +26,11 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum PayoutStatus {
+  PENDING
+  PAID
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String
@@ -101,6 +106,7 @@ model Booking {
   totalPrice     Float
   status         BookingStatus @default(PENDING)
   paymentStatus  PaymentStatus @default(PENDING)
+  payoutStatus   PayoutStatus  @default(PENDING)
   currency       String        
   stripeCheckoutSessionId String? @unique
   stripePaymentIntentId   String? @unique

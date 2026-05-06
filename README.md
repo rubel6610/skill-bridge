@@ -19,10 +19,22 @@ The robust API engine powering the MentorLink marketplace. Built with **Express.
 ## 🚀 Key Modules
 
 - **Auth System:** JWT-based authentication with role-based access control (Admin, Tutor, Student).
-- **Booking Engine:** Handles session scheduling, status updates, and prevents double-booking.
+- **Stripe Payments:** Integrated Stripe Checkout for secure student-to-platform transactions.
+- **Booking Engine:** Handles session scheduling, status transitions (Pending -> Paid -> Confirmed -> Completed), and prevents double-booking.
+- **Tutor Payouts:** Specialized system for admins to track and mark payouts to tutors after successful session completion.
 - **Tutor Profiles:** Manages tutor metadata, pricing, and category relationships.
 - **Review System:** Allows students to post verified ratings for completed sessions.
-- **Admin API:** Specialized endpoints for platform-wide user and booking oversight.
+- **Admin Oversight:** Comprehensive dashboard endpoints for managing users, categories, bookings, and financial flows.
+
+---
+
+## 💳 Payment & Session Workflow
+
+1.  **Booking:** Student creates a booking (Status: `PENDING`, Payment: `PENDING`).
+2.  **Payment:** Student pays via Stripe Checkout. Webhook updates status to `CONFIRMED` and Payment to `PAID`.
+3.  **Session:** Tutor and Student conduct the session.
+4.  **Completion:** Tutor marks the session as `COMPLETED` (only if paid).
+5.  **Payout:** Admin reviews completed sessions and marks them as `PAID` in the `payoutStatus` once funds are transferred to the tutor.
 
 ---
 
@@ -33,6 +45,7 @@ The robust API engine powering the MentorLink marketplace. Built with **Express.
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
 - **Database:** [PostgreSQL](https://www.postgresql.org/)
 - **ORM:** [Prisma](https://www.prisma.io/)
+- **Payments:** [Stripe](https://stripe.com/)
 - **Validation:** [Zod](https://zod.dev/)
 
 ---

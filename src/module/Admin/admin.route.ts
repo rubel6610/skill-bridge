@@ -18,5 +18,7 @@ router.delete('/categories/:id', AdminController.deleteCategory);
 
 // Bookings
 router.get('/bookings', AdminController.getAllBookings);
+router.patch('/bookings/:id/payment', AdminController.updateBookingPaymentStatus);
+router.patch('/bookings/:id/payout', AdminController.payoutToTutor);
 
 export const AdminRoutes = router;

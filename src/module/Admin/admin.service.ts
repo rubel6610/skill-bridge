@@ -162,6 +162,62 @@ const getAllBookingsFromDB = async () => {
    return bookings;
 };
 
+// ─────────────────────────────────────────
+// Update Booking Payment Status (Admin)
+// ─────────────────────────────────────────
+const updateBookingPaymentStatusIntoDB = async (bookingId: number, paymentStatus: any) => {
+
+   const booking = await prisma.booking.findUnique({
+      where: { id: bookingId }
+   });
+
+   if (!booking) {
+      throw new Error('Booking not found');
+   }
+
+   const data: any = { paymentStatus };
+
+   // If admin manually marks as PAID, confirm the booking
+   if (paymentStatus === 'PAID' && booking.status === 'PENDING') {
+      data.status = 'CONFIRMED';
+      data.paidAt = new Date();
+   }
+
+   return prisma.booking.update({
+      where: { id: bookingId },
+      data,
+   });
+};
+
+// ─────────────────────────────────────────
+// Payout to Tutor (Admin)
+// ─────────────────────────────────────────
+const payoutToTutorIntoDB = async (bookingId: number) => {
+
+   const booking = await prisma.booking.findUnique({
+      where: { id: bookingId }
+   });
+
+   if (!booking) {
+      throw new Error('Booking not found');
+   }
+
+   if (booking.status !== 'COMPLETED') {
+      throw new Error('Payout can only be made for completed sessions');
+   }
+
+   if (booking.paymentStatus !== 'PAID') {
+      throw new Error('Cannot payout for unpaid bookings');
+   }
+
+   return prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+         payoutStatus: 'PAID'
+      }
+   });
+};
+
 export const AdminService = {
    getAllUsersFromDB,
    updateUserStatusIntoDB,
@@ -169,4 +225,6 @@ export const AdminService = {
    createCategoryIntoDB,
    deleteCategoryFromDB,
    getAllBookingsFromDB,
+   updateBookingPaymentStatusIntoDB,
+   payoutToTutorIntoDB,
 };

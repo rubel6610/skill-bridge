@@ -162,6 +162,75 @@ const getAllBookings = async (req: Request, res: Response) => {
    }
 };
 
+// ─────────────────────────────────────────
+// PATCH /api/v1/admin/bookings/:id/payment
+// ─────────────────────────────────────────
+const updateBookingPaymentStatus = async (req: Request, res: Response) => {
+   try {
+      const bookingId = parseInt(req.params.id as string);
+      const { paymentStatus } = req.body;
+
+      if (isNaN(bookingId)) {
+         return sendResponse(res, {
+            statusCode: 400,
+            success: false,
+            message: 'Invalid booking id',
+            data: null,
+         });
+      }
+
+      const result = await AdminService.updateBookingPaymentStatusIntoDB(bookingId, paymentStatus);
+
+      sendResponse(res, {
+         statusCode: 200,
+         success: true,
+         message: 'Payment status updated successfully',
+         data: result,
+      });
+   } catch (error: any) {
+      sendResponse(res, {
+         statusCode: 500,
+         success: false,
+         message: error.message || 'Something went wrong',
+         data: null,
+      });
+   }
+};
+
+// ─────────────────────────────────────────
+// PATCH /api/v1/admin/bookings/:id/payout
+// ─────────────────────────────────────────
+const payoutToTutor = async (req: Request, res: Response) => {
+   try {
+      const bookingId = parseInt(req.params.id as string);
+
+      if (isNaN(bookingId)) {
+         return sendResponse(res, {
+            statusCode: 400,
+            success: false,
+            message: 'Invalid booking id',
+            data: null,
+         });
+      }
+
+      const result = await AdminService.payoutToTutorIntoDB(bookingId);
+
+      sendResponse(res, {
+         statusCode: 200,
+         success: true,
+         message: 'Payout marked as paid successfully',
+         data: result,
+      });
+   } catch (error: any) {
+      sendResponse(res, {
+         statusCode: 500,
+         success: false,
+         message: error.message || 'Something went wrong',
+         data: null,
+      });
+   }
+};
+
 export const AdminController = {
    getAllUsers,
    updateUserStatus,
@@ -169,4 +238,6 @@ export const AdminController = {
    createCategory,
    deleteCategory,
    getAllBookings,
+   updateBookingPaymentStatus,
+   payoutToTutor,
 };
