@@ -4,10 +4,10 @@ The robust API engine powering the MentorLink marketplace. Built with **Express.
 
 ## 🔗 Quick Links
 
-- **Frontend GitHub:** [https://github.com/rubel6610/mentorlink-frontend](https://github.com/rubel6610/mentorlink-frontend)
-- **Backend GitHub:** [https://github.com/rubel6610/mentor-link](https://github.com/rubel6610/mentorlink)
-- **Live Site:** [https://mentor-link-frontend-gamma.vercel.app](https://mentorlink-frontend-gamma.vercel.app/) (Replace with your actual URL)
-- **Backend API:** [Render](https://skill-bridge-zp3v.onrender.com) (Replace with your actual URL)
+- **Frontend GitHub:** [https://github.com/rubel6610/mentorlink-frontend](https://github.com/rubel6610/mentor-link-frontend)
+- **Backend GitHub:** [https://github.com/rubel6610/mentorlink](https://github.com/rubel6610/mentor-link)
+- **Live Site:** [https://mentorlink-frontend-gamma.vercel.app/](https://mentor-link-frontend-gamma.vercel.app/)
+- **Backend API:** [Render](https://skill-bridge-zp3v.onrender.com)
 
 
 ## 🔑 Demo Credentials
