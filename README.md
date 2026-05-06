@@ -1,12 +1,12 @@
-# ⚙️ SkillBridge Backend
+# ⚙️ MentorLink Backend
 
-The robust API engine powering the SkillBridge marketplace. Built with **Express.js** and **Prisma**, it provides secure authentication, complex booking logic, and comprehensive user management.
+The robust API engine powering the MentorLink marketplace. Built with **Express.js** and **Prisma**, it provides secure authentication, complex booking logic, and comprehensive user management.
 
 ## 🔗 Quick Links
 
-- **Frontend GitHub:** [https://github.com/rubel6610/skillbridge-frontend](https://github.com/rubel6610/skillbridge-frontend)
+- **Frontend GitHub:** [https://github.com/rubel6610/mentorlink-frontend](https://github.com/rubel6610/mentorlink-frontend)
 - **Backend GitHub:** [https://github.com/rubel6610/skill-bridge](https://github.com/rubel6610/skill-bridge)
-- **Live Site:** [https://skillbridge-demo.vercel.app](https://skillbridge-frontend-gamma.vercel.app/) (Replace with your actual URL)
+- **Live Site:** [https://mentorlink-demo.vercel.app](https://mentorlink-frontend-gamma.vercel.app/) (Replace with your actual URL)
 - **Backend API:** [Render](https://skill-bridge-zp3v.onrender.com) (Replace with your actual URL)
 
 
@@ -59,7 +59,11 @@ npm install
 ### 2. Database Setup
 Ensure you have a PostgreSQL instance running, then configure your `.env`:
 ```env
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/skillbridge?schema=public"
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/mentorlink?schema=public"
+CLIENT_URL="http://localhost:3000"
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+STRIPE_CURRENCY="usd"
 JWT_SECRET="your_secret_key"
 PORT=5000
 ```

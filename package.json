@@ -1,11 +1,14 @@
 {
-  "name": "skillbridge-ass4",
+  "name": "mentorlink-api",
   "version": "1.0.0",
   "scripts": {
+    "predev": "prisma generate",
     "dev": "tsx watch ./src/server.ts",
+    "prebuild": "prisma generate",
     "build": "tsc",
     "start": "node dist/server.js",
     "seed": "tsx ./src/seed/seedAdmin.ts",
+    "stripe:webhook": "stripe listen --forward-to localhost:5000/webhook",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -16,7 +19,8 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "stripe": "^22.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

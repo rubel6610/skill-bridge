@@ -9,6 +9,10 @@ const router = express.Router();
 // Student booking  
 router.post('/', auth(userRole.STUDENT), BookingController.createBooking);
 
+// Create/recreate Stripe Checkout for an unpaid booking
+router.post('/checkout/:id', auth(userRole.STUDENT), BookingController.createCheckoutForBooking);
+router.post('/:id/checkout', auth(userRole.STUDENT), BookingController.createCheckoutForBooking);
+
 // Student & Tutor bookings
 router.get('/', auth(userRole.STUDENT, userRole.TUTOR), BookingController.getMyBookings);
 

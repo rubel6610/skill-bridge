@@ -11,6 +11,25 @@ const categoryInclude = {
    },
 };
 
+const getSafeImageUrl = (src?: string | null) => {
+   const value = src?.trim();
+
+   if (!value) {
+      return null;
+   }
+
+   if (value.startsWith("/")) {
+      return value;
+   }
+
+   try {
+      const url = new URL(value);
+      return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+   } catch {
+      return null;
+   }
+};
+
 // ─────────────────────────────────────────
 // Create Tutor Profile
 // ─────────────────────────────────────────
@@ -38,7 +57,7 @@ const createTutorIntoDB = async (payload: any, userId: number) => {
          hourlyRate: payload.hourlyRate,
          experience: payload.experience || 0,
          location: payload.location,
-         imageUrl: payload.imageUrl,
+         imageUrl: getSafeImageUrl(payload.imageUrl),
          isApproved: payload.isApproved ?? true,
          avgRating: 0,
          totalReviews: 0,
@@ -142,7 +161,7 @@ const updateTutorProfileIntoDB = async (userId: number, payload: any) => {
          hourlyRate: payload.hourlyRate,
          experience: payload.experience,
          location: payload.location,
-         imageUrl: payload.imageUrl,
+         imageUrl: getSafeImageUrl(payload.imageUrl),
       },
       include: {
          user: {

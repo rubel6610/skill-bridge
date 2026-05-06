@@ -7,13 +7,67 @@ import { BookingService } from "./booking.service";
 // ─────────────────────────────────────────
 const createBooking = async (req: Request, res: Response) => {
    try {
-      const userId = req.user?.id;
+      const userId = Number(req.user?.id);
+
+      if (!userId) {
+         return sendResponse(res, {
+            statusCode: 401,
+            success: false,
+            message: 'Unauthorized user id is missing',
+            data: null,
+         });
+      }
+
       const result = await BookingService.createBookingIntoDB(userId, req.body);
 
       sendResponse(res, {
          statusCode: 201,
          success: true,
-         message: 'Booking created successfully',
+         message: 'Booking created. Continue to Stripe Checkout to complete payment.',
+         data: result,
+      });
+   } catch (error: any) {
+      sendResponse(res, {
+         statusCode: 500,
+         success: false,
+         message: error.message || 'Something went wrong',
+         data: null,
+      });
+   }
+};
+
+const createCheckoutForBooking = async (req: Request, res: Response) => {
+   try {
+      const bookingId = parseInt(req.params.id as string);
+      const userId = Number(req.user?.id);
+
+      if (!userId) {
+         return sendResponse(res, {
+            statusCode: 401,
+            success: false,
+            message: 'Unauthorized user id is missing',
+            data: null,
+         });
+      }
+
+      if (isNaN(bookingId)) {
+         return sendResponse(res, {
+            statusCode: 400,
+            success: false,
+            message: 'Invalid booking id',
+            data: null,
+         });
+      }
+
+      const result = await BookingService.createCheckoutForBookingFromDB(
+         userId,
+         bookingId,
+      );
+
+      sendResponse(res, {
+         statusCode: 200,
+         success: true,
+         message: 'Stripe checkout created successfully',
          data: result,
       });
    } catch (error: any) {
@@ -31,8 +85,17 @@ const createBooking = async (req: Request, res: Response) => {
 // ─────────────────────────────────────────
 const getMyBookings = async (req: Request, res: Response) => {
    try {
-      const userId = req.user?.id;
-      const role = req.user?.role;
+      const userId = Number(req.user?.id);
+      const role = String(req.user?.role || '');
+
+      if (!userId) {
+         return sendResponse(res, {
+            statusCode: 401,
+            success: false,
+            message: 'Unauthorized user id is missing',
+            data: null,
+         });
+      }
 
       const result = await BookingService.getMyBookingsFromDB(userId, role);
 
@@ -58,8 +121,17 @@ const getMyBookings = async (req: Request, res: Response) => {
 const getBookingById = async (req: Request, res: Response) => {
    try {
       const bookingId = parseInt(req.params.id as string);
-      const userId = req.user?.id;
-      const role = req.user?.role;
+      const userId = Number(req.user?.id);
+      const role = String(req.user?.role || '');
+
+      if (!userId) {
+         return sendResponse(res, {
+            statusCode: 401,
+            success: false,
+            message: 'Unauthorized user id is missing',
+            data: null,
+         });
+      }
 
       if (isNaN(bookingId)) {
          return sendResponse(res, {
@@ -94,9 +166,18 @@ const getBookingById = async (req: Request, res: Response) => {
 const updateBookingStatus = async (req: Request, res: Response) => {
    try {
       const bookingId = parseInt(req.params.id as string);
-      const userId = req.user?.id;
-      const role = req.user?.role;
+      const userId = Number(req.user?.id);
+      const role = String(req.user?.role || '');
       const { status } = req.body;
+
+      if (!userId) {
+         return sendResponse(res, {
+            statusCode: 401,
+            success: false,
+            message: 'Unauthorized user id is missing',
+            data: null,
+         });
+      }
 
       const result = await BookingService.updateBookingStatusIntoDB(
          bookingId,
@@ -126,6 +207,7 @@ const updateBookingStatus = async (req: Request, res: Response) => {
 
 export const BookingController = {
    createBooking,
+   createCheckoutForBooking,
    getMyBookings,
    getBookingById,
    updateBookingStatus,

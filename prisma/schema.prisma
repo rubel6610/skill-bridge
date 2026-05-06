@@ -13,9 +13,17 @@ enum Role {
 }
 
 enum BookingStatus {
+  PENDING
   CONFIRMED
   COMPLETED
   CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
 }
 
 model User {
@@ -91,7 +99,12 @@ model Booking {
   scheduledAt    DateTime
   duration       Int           // in minutes
   totalPrice     Float
-  status         BookingStatus @default(CONFIRMED)
+  status         BookingStatus @default(PENDING)
+  paymentStatus  PaymentStatus @default(PENDING)
+  currency       String        
+  stripeCheckoutSessionId String? @unique
+  stripePaymentIntentId   String? @unique
+  paidAt         DateTime?
   note           String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
